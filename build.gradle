@@ -1,0 +1,31 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.7'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.reactor'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	maven { url 'https://repo.spring.io/milestone' }
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'io.projectreactor:reactor-core'
+	implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
+	implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+dependencyManagement {
+     imports {
+          mavenBom "io.projectreactor:reactor-bom:2020.0.18"
+     }
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
