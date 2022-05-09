@@ -19,7 +19,7 @@ public class SpringBootReactorApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Flux<String> nombres = Flux.just("juna" , "juan" , "pedro","").
+		Flux<String> nombres = Flux.just("juna" , "juan" , "pedro","andres").
 				doOnNext(e ->{
 					if (e.isEmpty()) {
 						throw new RuntimeException("Nombres no pueden ser vacios");
@@ -27,7 +27,15 @@ public class SpringBootReactorApplication implements CommandLineRunner {
 					System.out.println(e);
 				});
 		nombres.subscribe(e -> Log.info(e),
-				error -> Log.error(error.getMessage()));
+				error -> Log.error(error.getMessage()),
+				new Runnable() {
+					
+					@Override
+					public void run() {
+						Log.info("ha ejecutado correctamente la ejecucion del observable");
+						
+					}
+				});
 	}
 
 }
