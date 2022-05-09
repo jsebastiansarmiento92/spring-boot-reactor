@@ -21,12 +21,14 @@ public class SpringBootReactorApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Flux<Usuario> nombres = Flux.just("juna" , "juan" , "pedro","andres").map(nombre ->new Usuario(nombre.toUpperCase(), null)).
+		Flux<Usuario> nombres = Flux.just("juna calme" , "juan sarmiento" , "pedro anito","andres cortes", "Bruce Lee", "Bruce Willis", "Juan Mengano").
+				map(nombre ->new Usuario(nombre.split(" ")[0].toUpperCase(), nombre.split(" ")[1].toUpperCase())).
+				filter(usuario -> usuario.getName().equalsIgnoreCase("bruce")).
 				doOnNext(usuario ->{
 					if (usuario == null) {
 						throw new RuntimeException("Nombres no pueden ser vacios");
 					}
-					System.out.println(usuario.getName());
+					System.out.println(usuario.getName() + " " + usuario.getLasName());
 				}).map(usuario -> {
 					String nombre = usuario.getName().toLowerCase();
 					usuario.setName(nombre);
