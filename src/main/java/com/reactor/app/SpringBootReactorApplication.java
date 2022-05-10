@@ -18,6 +18,7 @@ import reactor.core.publisher.Mono;
 public class SpringBootReactorApplication implements CommandLineRunner {
 
 	private static final Logger Log =  LoggerFactory.getLogger(SpringBootApplication.class);
+	private List<Usuario> usuariosList2;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootReactorApplication.class, args);
@@ -25,9 +26,30 @@ public class SpringBootReactorApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		exampleToString();
+		usuariosList2=new ArrayList<Usuario>();
+		exampleConvertColletList();
 		
 	}
+	
+
+	public void exampleConvertColletList() throws Exception {
+		List<Usuario> usuariosList = new ArrayList<>();
+		usuariosList.add(new Usuario("juna", "calme"));
+		usuariosList.add(new Usuario("juan", "sarmiento"));
+		usuariosList.add(new Usuario("pedro", "anito"));
+		usuariosList.add(new Usuario("andres", "cortes"));
+		usuariosList.add(new Usuario("Bruce", "Lee"));
+		usuariosList.add(new Usuario("Bruce", "Willis"));
+		usuariosList.add(new Usuario("Juan", "Mengano"));
+		
+		Flux.fromIterable(usuariosList).
+		collectList().
+		subscribe(list -> {
+			list.forEach(usuario -> Log.info(usuario.toString()));
+		});
+	}
+	
+	
 	
 	public void exampleToString() throws Exception {
 		List<Usuario> usuariosList = new ArrayList<>();
@@ -109,7 +131,18 @@ public class SpringBootReactorApplication implements CommandLineRunner {
 					String nombre = usuario.getName().toLowerCase();
 					usuario.setName(nombre);
 					return usuario;
-				}).subscribe(e -> Log.info(e.toString()));
+				}).subscribe(e -> {
+					e.setName("pedro");
+				});
+				nombres.map(nombre ->new Usuario(nombre.split(" ")[0].toUpperCase(), nombre.split(" ")[1].toUpperCase())).
+				flatMap(usuario -> {
+						usuario.setName("pedro");
+						return Mono.just(usuario);
+					
+				}).subscribe(nombre ->  this.usuariosList2.add(nombre));
+				for ( Usuario usuario : this.usuariosList2) {
+					System.err.println(usuario.toString());
+				}
 		
 	}
 	
