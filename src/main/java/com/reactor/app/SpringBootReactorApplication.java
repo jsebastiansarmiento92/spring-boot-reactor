@@ -9,6 +9,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.reactor.app.models.Comments;
+import com.reactor.app.models.UserComments;
 import com.reactor.app.models.Usuario;
 
 import reactor.core.publisher.Flux;
@@ -26,12 +28,26 @@ public class SpringBootReactorApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		usuariosList2=new ArrayList<Usuario>();
-		exampleConvertColletList();
+		//usuariosList2=new ArrayList<Usuario>();
+		ecampleUserCommentsFlatMap();
 		
 	}
 	
+	public void ecampleUserCommentsFlatMap() {
+		Mono<Usuario> userMono= Mono.fromCallable(()->new Usuario("Juan", "sarmiento"));
+		Mono<Comments> commentsUserMono = Mono.fromCallable(()-> {
+			Comments comments = new Comments();
+			comments.addComments("usuario registrado");
+			comments.addComments("usuario ogueado");
+			comments.addComments("usuario cerro session");
+			return comments;
+		});
+		userMono.flatMap(u->commentsUserMono.map(c->new UserComments(u, c))).
+		subscribe(uc -> Log.info(uc.toString()));
+	}
 
+	
+	
 	public void exampleConvertColletList() throws Exception {
 		List<Usuario> usuariosList = new ArrayList<>();
 		usuariosList.add(new Usuario("juna", "calme"));
